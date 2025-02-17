@@ -1,0 +1,138 @@
+{
+    "info": {
+        "_postman_id": "12345678-90ab-cdef-1234-567890abcdef",
+        "name": "Anime D verse Forum API",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "item": [
+        {
+            "name": "Register User",
+            "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                    "mode": "formdata",
+                    "formdata": [
+                        {
+                            "key": "username",
+                            "value": "testuser",
+                            "type": "text"
+                        },
+                        {
+                            "key": "password",
+                            "value": "password123",
+                            "type": "text"
+                        },
+                        {
+                            "key": "profile_pic",
+                            "type": "file",
+                            "src": "path/to/profile_pic.png"
+                        }
+                    ]
+                },
+                "url": {
+                    "raw": "{{base_url}}/api/register",
+                    "host": ["{{base_url}}"],
+                    "path": ["api", "register"]
+                }
+            }
+        },
+        {
+            "name": "Login User",
+            "request": {
+                "method": "POST",
+                "header": [
+                    { "key": "Content-Type", "value": "application/json" }
+                ],
+                "body": {
+                    "mode": "raw",
+                    "raw": "{ \"username\": \"testuser\", \"password\": \"password123\" }"
+                },
+                "url": {
+                    "raw": "{{base_url}}/api/login",
+                    "host": ["{{base_url}}"],
+                    "path": ["api", "login"]
+                }
+            }
+        },
+        {
+            "name": "Get Threads",
+            "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                    "raw": "{{base_url}}/api/threads",
+                    "host": ["{{base_url}}"],
+                    "path": ["api", "threads"]
+                }
+            }
+        },
+        {
+            "name": "Create Thread",
+            "request": {
+                "method": "POST",
+                "header": [
+                    { "key": "Content-Type", "value": "application/json" }
+                ],
+                "body": {
+                    "mode": "raw",
+                    "raw": "{ \"title\": \"Anime Discussion\", \"author_id\": 1, \"anime_id\": 1001 }"
+                },
+                "url": {
+                    "raw": "{{base_url}}/api/thread",
+                    "host": ["{{base_url}}"],
+                    "path": ["api", "thread"]
+                }
+            }
+        },
+        {
+            "name": "Post on Thread",
+            "request": {
+                "method": "POST",
+                "header": [
+                    { "key": "Content-Type", "value": "application/json" }
+                ],
+                "body": {
+                    "mode": "raw",
+                    "raw": "{ \"thread_id\": 1, \"author_id\": 1, \"content\": \"I love this anime!\" }"
+                },
+                "url": {
+                    "raw": "{{base_url}}/api/post",
+                    "host": ["{{base_url}}"],
+                    "path": ["api", "post"]
+                }
+            }
+        },
+        {
+            "name": "Like a Post",
+            "request": {
+                "method": "POST",
+                "header": [
+                    { "key": "Content-Type", "value": "application/json" }
+                ],
+                "body": {
+                    "mode": "raw",
+                    "raw": "{ \"post_id\": 1 }"
+                },
+                "url": {
+                    "raw": "{{base_url}}/api/like",
+                    "host": ["{{base_url}}"],
+                    "path": ["api", "like"]
+                }
+            }
+        },
+        {
+            "name": "Get Profile Picture",
+            "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                    "raw": "{{base_url}}/api/profile_pic/profile_123.png",
+                    "host": ["{{base_url}}"],
+                    "path": ["api", "profile_pic", "profile_123.png"]
+                }
+            }
+        }
+    ],
+    "variable": [{ "key": "base_url", "value": "http://localhost:8000" }]
+}
