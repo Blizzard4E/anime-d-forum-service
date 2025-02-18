@@ -91,7 +91,7 @@ fn get_threads() -> Json<Vec<Thread>> {
 }
 
 #[get("/threads/<thread_id>")]
-fn get_thread_by_id(thread_id: i32) -> Json<Vec<Thread>> {
+fn get_thread_by_id(thread_id: i32) -> Json<Option<Thread>> {
     match get_connection() {
         Ok(mut conn) => {
             let result: Vec<Thread> = conn
@@ -112,7 +112,8 @@ fn get_thread_by_id(thread_id: i32) -> Json<Vec<Thread>> {
                     JOIN users ON threads.author_id = users.id
                     LEFT JOIN posts ON posts.thread_id = threads.id
                     WHERE threads.id = {}
-                    GROUP BY threads.id, users.id 
+                    GROUP BY threads.id, users.id
+                    
                     ", thread_id),
                     |(
                         id,
@@ -137,9 +138,9 @@ fn get_thread_by_id(thread_id: i32) -> Json<Vec<Thread>> {
                     }
                 )
                 .unwrap_or_else(|_| vec![]);
-            Json(result)
+            Json(result.into_iter().next())
         }
-        Err(_) => Json(vec![]),
+        Err(_) => Json(None),
     }
 }
 
