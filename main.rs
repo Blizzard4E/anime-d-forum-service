@@ -90,6 +90,59 @@ fn get_threads() -> Json<Vec<Thread>> {
     }
 }
 
+#[get("/threads/<thread_id>")]
+fn get_thread_by_id(thread_id: i32) -> Json<Vec<Thread>> {
+    match get_connection() {
+        Ok(mut conn) => {
+            let result: Vec<Thread> = conn
+                .query_map(
+                    // Use JOIN to include username and profile_url from users table
+                    format!(r"
+                    SELECT 
+                        threads.id, 
+                        threads.title, 
+                        threads.author_id, 
+                        threads.anime_id, 
+                        threads.created_at, 
+                        users.username, 
+                        users.profile_url, 
+                        users.created_at,
+                        COUNT(posts.id) AS num_posts
+                    FROM threads 
+                    JOIN users ON threads.author_id = users.id
+                    LEFT JOIN posts ON posts.thread_id = threads.id
+                    WHERE threads.id = {}
+                    GROUP BY threads.id, users.id 
+                    ", thread_id),
+                    |(
+                        id,
+                        title,
+                        author_id,
+                        anime_id,
+                        created_at,
+                        username,
+                        profile_url,
+                        user_created_at,
+                        num_posts,
+                    )| Thread {
+                        id,
+                        title,
+                        author_id,
+                        anime_id,
+                        created_at,
+                        username, // Map username from users table
+                        profile_url, // Map profile_url from users table
+                        user_created_at,
+                        num_posts, // Map the post count
+                    }
+                )
+                .unwrap_or_else(|_| vec![]);
+            Json(result)
+        }
+        Err(_) => Json(vec![]),
+    }
+}
+
 #[get("/threads/anime/<anime_id>")]
 fn get_threads_by_anime(anime_id: i32) -> Json<Vec<Thread>> {
     match get_connection() {
@@ -388,7 +441,8 @@ fn rocket() -> _ {
                 create_thread,
                 create_post,
                 get_posts,
-                get_threads_by_anime
+                get_threads_by_anime,
+                get_thread_by_id
             ]
         )
 }
