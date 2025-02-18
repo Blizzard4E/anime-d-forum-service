@@ -35,6 +35,7 @@ struct Thread {
     username: String, // New field for username
     profile_url: Option<String>, // New field for profile URL
     user_created_at: String,
+    num_posts: i64, // New field for the count of posts
 }
 
 #[get("/threads")]
@@ -45,9 +46,20 @@ fn get_threads() -> Json<Vec<Thread>> {
                 .query_map(
                     // Use JOIN to include username and profile_url from users table
                     r"
-                    SELECT threads.id, threads.title, threads.author_id, threads.anime_id, threads.created_at, users.username, users.profile_url, users.created_at
+                    SELECT 
+                        threads.id, 
+                        threads.title, 
+                        threads.author_id, 
+                        threads.anime_id, 
+                        threads.created_at, 
+                        users.username, 
+                        users.profile_url, 
+                        users.created_at,
+                        COUNT(posts.id) AS num_posts
                     FROM threads
                     JOIN users ON threads.author_id = users.id
+                    LEFT JOIN posts ON posts.thread_id = threads.id
+                    GROUP BY threads.id, users.id;
                     ",
                     |(
                         id,
@@ -58,6 +70,7 @@ fn get_threads() -> Json<Vec<Thread>> {
                         username,
                         profile_url,
                         user_created_at,
+                        num_posts,
                     )| Thread {
                         id,
                         title,
@@ -67,6 +80,7 @@ fn get_threads() -> Json<Vec<Thread>> {
                         username, // Map username from users table
                         profile_url, // Map profile_url from users table
                         user_created_at,
+                        num_posts, // Map the post count
                     }
                 )
                 .unwrap_or_else(|_| vec![]);
@@ -84,9 +98,20 @@ fn get_threads_by_anime(anime_id: i32) -> Json<Vec<Thread>> {
                 .query_map(
                     // Use JOIN to include username and profile_url from users table
                     format!(r"
-                    SELECT threads.id, threads.title, threads.author_id, threads.anime_id, threads.created_at, users.username, users.profile_url, users.created_at
+                    SELECT 
+                        threads.id, 
+                        threads.title, 
+                        threads.author_id, 
+                        threads.anime_id, 
+                        threads.created_at, 
+                        users.username, 
+                        users.profile_url, 
+                        users.created_at,
+                        COUNT(posts.id) AS num_posts
                     FROM threads
                     JOIN users ON threads.author_id = users.id WHERE threads.anime_id = {}
+                    LEFT JOIN posts ON posts.thread_id = threads.id
+                    GROUP BY threads.id, users.id;
                     ", anime_id),
                     |(
                         id,
@@ -97,6 +122,7 @@ fn get_threads_by_anime(anime_id: i32) -> Json<Vec<Thread>> {
                         username,
                         profile_url,
                         user_created_at,
+                        num_posts,
                     )| Thread {
                         id,
                         title,
@@ -106,6 +132,7 @@ fn get_threads_by_anime(anime_id: i32) -> Json<Vec<Thread>> {
                         username, // Map username from users table
                         profile_url, // Map profile_url from users table
                         user_created_at,
+                        num_posts, // Map the post count
                     }
                 )
                 .unwrap_or_else(|_| vec![]);
