@@ -76,6 +76,45 @@ fn get_threads() -> Json<Vec<Thread>> {
     }
 }
 
+#[get("/threads/anime/<anime_id>")]
+fn get_threads_by_anime(anime_id: i32) -> Json<Vec<Thread>> {
+    match get_connection() {
+        Ok(mut conn) => {
+            let result: Vec<Thread> = conn
+                .query_map(
+                    // Use JOIN to include username and profile_url from users table
+                    format!(r"
+                    SELECT threads.id, threads.title, threads.author_id, threads.anime_id, threads.created_at, users.username, users.profile_url, users.created_at
+                    FROM threads
+                    JOIN users ON threads.author_id = users.id WHERE threads.anime_id = {}
+                    ", anime_id),
+                    |(
+                        id,
+                        title,
+                        author_id,
+                        anime_id,
+                        created_at,
+                        username,
+                        profile_url,
+                        user_created_at,
+                    )| Thread {
+                        id,
+                        title,
+                        author_id,
+                        anime_id,
+                        created_at,
+                        username, // Map username from users table
+                        profile_url, // Map profile_url from users table
+                        user_created_at,
+                    }
+                )
+                .unwrap_or_else(|_| vec![]);
+            Json(result)
+        }
+        Err(_) => Json(vec![]),
+    }
+}
+
 #[derive(Serialize)]
 struct Post {
     id: i32,
@@ -321,7 +360,8 @@ fn rocket() -> _ {
                 get_user_by_session,
                 create_thread,
                 create_post,
-                get_posts
+                get_posts,
+                get_threads_by_anime
             ]
         )
 }

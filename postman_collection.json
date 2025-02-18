@@ -1,132 +1,241 @@
 {
-    "info": {
-        "name": "Anime Forum API",
-        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
-    },
-    "variable": [
-        {
-            "key": "base_url",
-            "value": "http://localhost:8000"
-        }
-    ],
-    "item": [
-        {
-            "name": "Get Threads",
-            "request": {
-                "method": "GET",
-                "url": "{{base_url}}/threads"
-            }
-        },
-        {
-            "name": "Get Posts by Thread ID",
-            "request": {
-                "method": "GET",
-                "url": "{{base_url}}/posts/{{thread_id}}"
-            }
-        },
-        {
-            "name": "Register User",
-            "request": {
-                "method": "POST",
-                "url": "{{base_url}}/register",
-                "body": {
-                    "mode": "formdata",
-                    "formdata": [
-                        {
-                            "key": "username",
-                            "value": "testuser",
-                            "type": "text"
-                        },
-                        {
-                            "key": "password",
-                            "value": "password123",
-                            "type": "text"
-                        },
-                        {
-                            "key": "profile_url",
-                            "value": "https://example.com/profile.jpg",
-                            "type": "text"
-                        }
-                    ]
-                }
-            }
-        },
-        {
-            "name": "Login User",
-            "request": {
-                "method": "POST",
-                "url": "{{base_url}}/login",
-                "body": {
-                    "mode": "formdata",
-                    "formdata": [
-                        {
-                            "key": "username",
-                            "value": "testuser",
-                            "type": "text"
-                        },
-                        {
-                            "key": "password",
-                            "value": "password123",
-                            "type": "text"
-                        }
-                    ]
-                }
-            }
-        },
-        {
-            "name": "Get User by Session",
-            "request": {
-                "method": "POST",
-                "url": "{{base_url}}/user",
-                "body": {
-                    "mode": "formdata",
-                    "formdata": [
-                        {
-                            "key": "session_token",
-                            "value": "{{session_token}}",
-                            "type": "text"
-                        }
-                    ]
-                }
-            }
-        },
-        {
-            "name": "Create Thread",
-            "request": {
-                "method": "POST",
-                "url": "{{base_url}}/thread",
-                "body": {
-                    "mode": "formdata",
-                    "formdata": [
-                        {
-                            "key": "title",
-                            "value": "New Anime Discussion",
-                            "type": "text"
-                        },
-                        { "key": "author_id", "value": "1", "type": "text" },
-                        { "key": "anime_id", "value": "101", "type": "text" }
-                    ]
-                }
-            }
-        },
-        {
-            "name": "Create Post",
-            "request": {
-                "method": "POST",
-                "url": "{{base_url}}/post",
-                "body": {
-                    "mode": "formdata",
-                    "formdata": [
-                        {
-                            "key": "content",
-                            "value": "This is a great anime!",
-                            "type": "text"
-                        },
-                        { "key": "author_id", "value": "1", "type": "text" },
-                        { "key": "thread_id", "value": "5", "type": "text" }
-                    ]
-                }
-            }
-        }
-    ]
+	"info": {
+		"_postman_id": "4a7aed10-3707-4b17-9ae2-fb66bd703727",
+		"name": "Anime Forum API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "38080305",
+		"_collection_link": "https://planetary-trinity-672369.postman.co/workspace/Team-Workspace~df8c7068-e05f-4cc0-82f3-763dc5e49d28/collection/38080305-4a7aed10-3707-4b17-9ae2-fb66bd703727?action=share&source=collection_link&creator=38080305"
+	},
+	"item": [
+		{
+			"name": "Get Threads",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/threads",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"threads"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Threads By Anime ID",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/threads/anime/2",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"threads",
+						"anime",
+						"2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Posts by Thread ID",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/posts/{{thread_id}}",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"posts",
+						"{{thread_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Register User",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "username",
+							"value": "testuser",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "password123",
+							"type": "text"
+						},
+						{
+							"key": "profile_url",
+							"value": "https://example.com/profile.jpg",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{base_url}}/register",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Login User",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "username",
+							"value": "testuser",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "password123",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{base_url}}/login",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get User by Session",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "session_token",
+							"value": "{{session_token}}",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{base_url}}/user",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"user"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Thread",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "title",
+							"value": "New Anime Discussion",
+							"type": "text"
+						},
+						{
+							"key": "author_id",
+							"value": "1",
+							"type": "text"
+						},
+						{
+							"key": "anime_id",
+							"value": "101",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{base_url}}/thread",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"thread"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Post",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "content",
+							"value": "This is a great anime!",
+							"type": "text"
+						},
+						{
+							"key": "author_id",
+							"value": "1",
+							"type": "text"
+						},
+						{
+							"key": "thread_id",
+							"value": "5",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{base_url}}/post",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"post"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:8000"
+		}
+	]
 }
