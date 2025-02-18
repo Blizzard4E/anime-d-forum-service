@@ -1,15 +1,28 @@
 {
     "info": {
-        "_postman_id": "12345678-90ab-cdef-1234-567890abcdef",
-        "name": "Anime D verse Forum API",
+        "name": "Anime Forum API",
         "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
     },
     "item": [
         {
+            "name": "Get Threads",
+            "request": {
+                "method": "GET",
+                "url": "http://localhost:8000/threads"
+            }
+        },
+        {
+            "name": "Get Posts by Thread ID",
+            "request": {
+                "method": "GET",
+                "url": "http://localhost:8000/posts/{{thread_id}}"
+            }
+        },
+        {
             "name": "Register User",
             "request": {
                 "method": "POST",
-                "header": [],
+                "url": "http://localhost:8000/register",
                 "body": {
                     "mode": "formdata",
                     "formdata": [
@@ -24,16 +37,11 @@
                             "type": "text"
                         },
                         {
-                            "key": "profile_pic",
-                            "type": "file",
-                            "src": "path/to/profile_pic.png"
+                            "key": "profile_url",
+                            "value": "https://example.com/profile.jpg",
+                            "type": "text"
                         }
                     ]
-                },
-                "url": {
-                    "raw": "{{base_url}}/api/register",
-                    "host": ["{{base_url}}"],
-                    "path": ["api", "register"]
                 }
             }
         },
@@ -41,29 +49,38 @@
             "name": "Login User",
             "request": {
                 "method": "POST",
-                "header": [
-                    { "key": "Content-Type", "value": "application/json" }
-                ],
+                "url": "http://localhost:8000/login",
                 "body": {
-                    "mode": "raw",
-                    "raw": "{ \"username\": \"testuser\", \"password\": \"password123\" }"
-                },
-                "url": {
-                    "raw": "{{base_url}}/api/login",
-                    "host": ["{{base_url}}"],
-                    "path": ["api", "login"]
+                    "mode": "formdata",
+                    "formdata": [
+                        {
+                            "key": "username",
+                            "value": "testuser",
+                            "type": "text"
+                        },
+                        {
+                            "key": "password",
+                            "value": "password123",
+                            "type": "text"
+                        }
+                    ]
                 }
             }
         },
         {
-            "name": "Get Threads",
+            "name": "Get User by Session",
             "request": {
-                "method": "GET",
-                "header": [],
-                "url": {
-                    "raw": "{{base_url}}/api/threads",
-                    "host": ["{{base_url}}"],
-                    "path": ["api", "threads"]
+                "method": "POST",
+                "url": "http://localhost:8000/user",
+                "body": {
+                    "mode": "formdata",
+                    "formdata": [
+                        {
+                            "key": "session_token",
+                            "value": "{{session_token}}",
+                            "type": "text"
+                        }
+                    ]
                 }
             }
         },
@@ -71,68 +88,39 @@
             "name": "Create Thread",
             "request": {
                 "method": "POST",
-                "header": [
-                    { "key": "Content-Type", "value": "application/json" }
-                ],
+                "url": "http://localhost:8000/thread",
                 "body": {
-                    "mode": "raw",
-                    "raw": "{ \"title\": \"Anime Discussion\", \"author_id\": 1, \"anime_id\": 1001 }"
-                },
-                "url": {
-                    "raw": "{{base_url}}/api/thread",
-                    "host": ["{{base_url}}"],
-                    "path": ["api", "thread"]
+                    "mode": "formdata",
+                    "formdata": [
+                        {
+                            "key": "title",
+                            "value": "New Anime Discussion",
+                            "type": "text"
+                        },
+                        { "key": "author_id", "value": "1", "type": "text" },
+                        { "key": "anime_id", "value": "101", "type": "text" }
+                    ]
                 }
             }
         },
         {
-            "name": "Post on Thread",
+            "name": "Create Post",
             "request": {
                 "method": "POST",
-                "header": [
-                    { "key": "Content-Type", "value": "application/json" }
-                ],
+                "url": "http://localhost:8000/post",
                 "body": {
-                    "mode": "raw",
-                    "raw": "{ \"thread_id\": 1, \"author_id\": 1, \"content\": \"I love this anime!\" }"
-                },
-                "url": {
-                    "raw": "{{base_url}}/api/post",
-                    "host": ["{{base_url}}"],
-                    "path": ["api", "post"]
-                }
-            }
-        },
-        {
-            "name": "Like a Post",
-            "request": {
-                "method": "POST",
-                "header": [
-                    { "key": "Content-Type", "value": "application/json" }
-                ],
-                "body": {
-                    "mode": "raw",
-                    "raw": "{ \"post_id\": 1 }"
-                },
-                "url": {
-                    "raw": "{{base_url}}/api/like",
-                    "host": ["{{base_url}}"],
-                    "path": ["api", "like"]
-                }
-            }
-        },
-        {
-            "name": "Get Profile Picture",
-            "request": {
-                "method": "GET",
-                "header": [],
-                "url": {
-                    "raw": "{{base_url}}/api/profile_pic/profile_123.png",
-                    "host": ["{{base_url}}"],
-                    "path": ["api", "profile_pic", "profile_123.png"]
+                    "mode": "formdata",
+                    "formdata": [
+                        {
+                            "key": "content",
+                            "value": "This is a great anime!",
+                            "type": "text"
+                        },
+                        { "key": "author_id", "value": "1", "type": "text" },
+                        { "key": "thread_id", "value": "5", "type": "text" }
+                    ]
                 }
             }
         }
-    ],
-    "variable": [{ "key": "base_url", "value": "http://localhost:8000" }]
+    ]
 }

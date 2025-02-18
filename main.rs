@@ -151,6 +151,40 @@ async fn register(user: Form<NewUser>) -> Json<SessionResponse> {
     Json(SessionResponse { session_token })
 }
 
+#[derive(FromForm)]
+struct LoginForm {
+    username: String,
+    password: String,
+}
+
+#[post("/login", data = "<login_form>")]
+fn login(login_form: Form<LoginForm>) -> Json<Option<SessionResponse>> {
+    match get_connection() {
+        Ok(mut conn) => {
+            let query = r"SELECT id FROM users WHERE username = :username AND password = :password";
+            let user_id: Option<i32> = conn
+                .exec_first(
+                    query,
+                    params! { "username" => &login_form.username, "password" => &login_form.password }
+                )
+                .unwrap_or(None);
+
+            if let Some(user_id) = user_id {
+                let session_token = Uuid::new_v4().to_string();
+                let insert_session_query =
+                    r"INSERT INTO sessions (user_id, session_token) VALUES (:user_id, :session_token)";
+                conn.exec_drop(
+                    insert_session_query,
+                    params! { "user_id" => user_id, "session_token" => &session_token }
+                ).unwrap();
+                return Json(Some(SessionResponse { session_token }));
+            }
+            Json(None)
+        }
+        Err(_) => Json(None),
+    }
+}
+
 #[derive(Serialize)]
 struct User {
     id: i32,
@@ -280,6 +314,7 @@ fn rocket() -> _ {
             "/",
             routes![
                 index,
+                login,
                 get_threads,
                 register,
                 get_user_by_session,
