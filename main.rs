@@ -310,6 +310,7 @@ fn create_post(new_post: Form<NewPost>) -> Json<Option<i32>> {
 fn rocket() -> _ {
     rocket
         ::build()
+        .configure(rocket::Config::figment().merge(("port", 25566)))
         .mount(
             "/",
             routes![
