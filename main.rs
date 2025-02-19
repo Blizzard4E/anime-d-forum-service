@@ -30,7 +30,7 @@ struct Thread {
     id: i32,
     title: String,
     author_id: i32,
-    anime_id: i32,
+    anime_id: String,
     created_at: String,
     username: String, // New field for username
     profile_url: Option<String>, // New field for profile URL
@@ -145,7 +145,7 @@ fn get_thread_by_id(thread_id: i32) -> Json<Option<Thread>> {
 }
 
 #[get("/threads/anime/<anime_id>")]
-fn get_threads_by_anime(anime_id: i32) -> Json<Vec<Thread>> {
+fn get_threads_by_anime(anime_id: String) -> Json<Vec<Thread>> {
     match get_connection() {
         Ok(mut conn) => {
             let result: Vec<Thread> = conn
@@ -163,8 +163,9 @@ fn get_threads_by_anime(anime_id: i32) -> Json<Vec<Thread>> {
                         users.created_at,
                         COUNT(posts.id) AS num_posts
                     FROM threads
-                    JOIN users ON threads.author_id = users.id WHERE threads.anime_id = {}
+                    JOIN users ON threads.author_id = users.id
                     LEFT JOIN posts ON posts.thread_id = threads.id
+                    WHERE threads.anime_id = '{}'
                     GROUP BY threads.id, users.id;
                     ", anime_id),
                     |(
@@ -362,7 +363,7 @@ fn index() -> &'static str {
 struct NewThread {
     title: String,
     author_id: i32,
-    anime_id: i32,
+    anime_id: String,
 }
 
 #[post("/thread", data = "<new_thread>")]
